@@ -9,7 +9,7 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # Database setup
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = "sqlite:///./entries.db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = sqlalchemy.orm.declarative_base()
