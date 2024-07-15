@@ -1,12 +1,34 @@
 import datetime
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, Date, Float
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
+from starlette.responses import FileResponse
 
 app = FastAPI()
+
+
+origins = [
+    "*",
+    "null",
+    "http://localhost",
+    "http://localhost:8080",
+    "https://localhost",
+    "https://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
+
 
 # Database setup
 DATABASE_URL = "sqlite:///./entries.db"
@@ -73,6 +95,20 @@ async def read_daily_entry(date: datetime.date, db: Session = Depends(get_db)):
     if db_entry is None:
         raise HTTPException(status_code=404, detail="Entry not found")
     return db_entry
+
+@app.get("/")
+async def read_index():
+    return FileResponse('frontend/index.html')
+
+
+@app.get("/script.js")
+async def read_index():
+    return FileResponse('frontend/script.js')
+
+
+@app.get("/style.css")
+async def read_index():
+    return FileResponse('frontend/style.css')
 
 
 if __name__ == "__main__":
