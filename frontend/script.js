@@ -37,7 +37,7 @@ window.onload = () => {
         request.onload = () => {
             const data = JSON.parse(request.responseText);
             const amount = parseFloat(data.amount);
-            totalAmount = amount;
+            totalAmount = Number.isNaN(amount) ? 0 : amount;
             updateUI(totalAmount);
         };
 
